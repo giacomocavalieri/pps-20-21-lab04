@@ -16,13 +16,13 @@ class PowerIteratorsTest {
     assertEquals(Option.of(7), pi.next());
     assertEquals(Option.of(9), pi.next());
     assertEquals(Option.of(11), pi.next());
-    assertEquals(List.Cons(5, List.Cons(7, List.Cons(9, List.Cons(11,List.Nil())))), pi.allSoFar()); // elementi già prodotti
+    assertEquals(List(5, 7, 9, 11), pi.allSoFar()); // elementi già prodotti
     (0 until 10) foreach (_ => pi.next()) // procedo in avanti per un po'..
     assertEquals(Option.of(33), pi.next()); // sono arrivato a 33
   }
 
   @Test def testFromList(): Unit = {
-    val l = Cons(10, Cons(20, Cons(30, Nil())))
+    val l = List(10, 20, 30)
 
     val iterator = factory.fromList(l)
     forEach(l)(x => assertEquals(Option.of(x), iterator.next()))

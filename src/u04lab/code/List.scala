@@ -3,7 +3,6 @@ package u04lab.code
 import scala.annotation.tailrec
 
 object Lists extends App {
-
   // A generic linkedlist
   sealed trait List[E]
 
@@ -26,6 +25,7 @@ object Lists extends App {
       case _ => l2
     }
 
+    @tailrec
     def drop[A](l: List[A], n: Int): List[A] = l match {
       case _ if n<=0 || l==Nil() => l
       case Cons(h,t) => drop(t,n-1)
@@ -41,6 +41,8 @@ object Lists extends App {
       case Cons(h,t) => filter(t)(f)
       case Nil() => Nil()
     }
+
+    def allMatch[A](l: List[A])(f: A => Boolean): Boolean = foldLeft(l)(true)((acc, x) => acc && f(x))
 
     def flatMap[A,B](l: List[A])(f: A => List[B]): List[B] = l match {
       case Cons(h,t) => append(f(h),flatMap(t)(f))
