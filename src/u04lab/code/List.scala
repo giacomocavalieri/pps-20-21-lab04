@@ -12,6 +12,8 @@ object Lists extends App {
     case class Cons[E](head: E, tail: List[E]) extends List[E]
     case class Nil[E]() extends List[E]
 
+    def apply[A](elems: A*): List[A] = elems.foldRight(nil[A])((elem, listSoFar) => Cons(elem, listSoFar))
+
     def nil[A]: List[A] = Nil() // smart constructor
 
     def sum(l: List[Int]): Int = l match {
