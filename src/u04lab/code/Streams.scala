@@ -1,6 +1,9 @@
 package u04lab.code
 
+import scala.annotation.tailrec
 import scala.util.Random
+import Optionals.Option
+import Optionals.Option._
 
 object Streams extends App {
   import Lists._
@@ -23,20 +26,34 @@ object Streams extends App {
       case _ => List.Nil()
     }
 
+    def head[A](stream: Stream[A]): Option[A] = stream match {
+      case Cons(fh, _) =>Some(fh())
+      case _ => None()
+    }
+
+    def tail[A](stream: Stream[A]): Stream[A] = drop(stream)(1)
+
     def map[A, B](stream: Stream[A])(f: A => B): Stream[B] = stream match {
       case Cons(head, tail) => cons(f(head()), map(tail())(f))
       case _ => Empty()
     }
 
     def filter[A](stream: Stream[A])(pred: A => Boolean): Stream[A] = stream match {
-      case Cons(head, tail) if (pred(head())) => cons(head(), filter(tail())(pred))
-      case Cons(head, tail) => filter(tail())(pred)
+      case Cons(head, tail) if pred(head()) => cons(head(), filter(tail())(pred))
+      case Cons(_, tail) => filter(tail())(pred)
       case _ => Empty()
     }
 
     def take[A](stream: Stream[A])(n: Int): Stream[A] = (stream,n) match {
       case (Cons(head, tail), n) if n>0 => cons(head(), take(tail())(n - 1))
       case _ => Empty()
+    }
+
+    @tailrec
+    def drop[A](stream: Stream[A])(n: Int): Stream[A] = (stream, n) match {
+      case (s, 0) => s
+      case (Empty(), _) => empty()
+      case (Cons(_, ft), n) => drop(ft())(n-1)
     }
 
     def takeWhile[A](stream: Stream[A])(pred: A=>Boolean): Stream[A] = stream match {
@@ -58,6 +75,10 @@ object Streams extends App {
 
     def generate[A](next: => A): Stream[A] = cons(next, generate(next))
 
+    def fromList[A](list: List[A]): Stream[A] = list match {
+      case List.Cons(head, tail) => cons(head, fromList(tail))
+      case _ => empty()
+    }
   }
 
   import Stream._
