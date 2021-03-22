@@ -21,14 +21,9 @@ object PowerIterator {
 
     override def next(): Option[A] = {
       val nextElement = head(stream)
+      applyIfPresent(nextElement)(elem => generated = List.Cons(elem, generated))
       stream = tail(stream)
-      addToGenerated(nextElement)
       nextElement
-    }
-
-    private def addToGenerated(elem: Option[A]): Unit = elem match {
-      case Some(a) => generated = List.Cons(a, generated)
-      case _ => ()
     }
 
     override def allSoFar(): List[A] = reverse(generated)

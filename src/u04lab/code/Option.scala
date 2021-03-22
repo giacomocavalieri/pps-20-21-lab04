@@ -25,6 +25,11 @@ object Optionals extends App {
       case Some(a) => f(a)
       case _ => None()
     }
+
+    def applyIfPresent[A](opt: Option[A])(f: A => Unit): Unit = opt match {
+      case Some(a) => f(a)
+      case _ => ()
+    }
   }
 
   import Option._
