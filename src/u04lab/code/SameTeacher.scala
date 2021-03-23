@@ -5,8 +5,8 @@ import Lists.List._
 
 object SameTeacher {
   def unapply(courses: List[Course]): Option[String] = {
-    courses match {
-      case Cons(h, _) if allMatch(courses)(_.teacher == h.teacher) => Some(h.teacher)
+    map(courses)(_.teacher) match {
+      case Cons(teacher, t) if allMatch(t)(_ == teacher) => Some(teacher)
       case _ => None
     }
   }
@@ -31,6 +31,13 @@ object TestSameTeacher {
     List(cPPS, cOOP, cPCD) match {
       case SameTeacher(_) => fail("Should not match with sameTeacher")
       case _ => assertTrue(true)
+    }
+  }
+
+  @Test def testUnapplyOnSingleElementList(): Unit = {
+    List(cPPS) match {
+      case SameTeacher(_) => assertTrue(true)
+      case _ => fail("Should have matched with sameTeacher")
     }
   }
 }
