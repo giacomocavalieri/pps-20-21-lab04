@@ -76,7 +76,7 @@ object Lists extends App {
       case _ => Nil()
     })
 
-    def appendByFold[A](l1: List[A], l2: List[A]): List[A] = ???
+    def appendByFold[A](l1: List[A], l2: List[A]): List[A] = foldRight(l1)(l2)((x, acc) => Cons(x, acc))
 
     def length(l: List[_]): Int = foldLeft(l)(0)((acc,_) => acc+1)
   }
