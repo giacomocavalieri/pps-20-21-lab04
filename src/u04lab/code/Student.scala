@@ -23,7 +23,7 @@ object Student {
     private var _courses: List[Course] = List.Nil()
 
     override def enrolling(coursesToAppend: Course*): Unit = {
-      coursesToAppend foreach (course => _courses = append(_courses, Cons(course, nil)))
+      coursesToAppend foreach (course => _courses = Cons(course, _courses))
     }
     override def courses: List[String] = map(_courses)(_.name)
     override def hasTeacher(teacher: String): Boolean = foldLeft(map(_courses)(_.teacher == teacher))(false)(_||_)
@@ -51,12 +51,12 @@ object Test {
 
   @Test def testEnrolling(): Unit = {
     Array(cPPS, cPCD, cSDR) foreach (student.enrolling(_))
-    assertEquals(Cons(cPPS.name, Cons(cPCD.name, Cons(cSDR.name, nil))), student.courses)
+    assertEquals(map(List(cSDR, cPCD, cPPS))(_.name), student.courses)
   }
 
   @Test def testVarargEnrolling(): Unit = {
     student.enrolling(cPPS, cPCD, cSDR)
-    assertEquals(Cons(cPPS.name, Cons(cPCD.name, Cons(cSDR.name, nil))), student.courses)
+    assertEquals(map(List(cSDR, cPCD, cPPS))(_.name), student.courses)
   }
 
   @Test def testHasTeacher(): Unit = {
